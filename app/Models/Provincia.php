@@ -12,4 +12,5 @@ class Provincia extends Model
     protected $table = 'provincia';
 
     protected $fillable = ['nombre'];
+
 }

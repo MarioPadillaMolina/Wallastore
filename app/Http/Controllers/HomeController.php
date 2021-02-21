@@ -26,7 +26,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $provincias = Provincia::all();
-        return view('home');
+        $user = auth()->user();
+        $provincias = Provincia::orderBy('nombre')->get(); 
+        return view('home', ['provincias' => $provincias, 'user' => $user]);
     }
+
+
+
 }

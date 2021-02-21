@@ -15,6 +15,14 @@ use Auth;
 
 class ProductoController extends Controller
 {
+
+    public function __construct()
+    {
+        // $this->middleware('verified');
+        $this->middleware('verified')->except(['show']);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +33,7 @@ class ProductoController extends Controller
     {
         $user = auth()->user();
         if ($user->admin) {
-            $productos = Producto::all()->orderBy('fecha', 'DESC');
+            $productos = Producto::orderBy('fecha', 'DESC')->get();
         } else {
             $productos =  Producto::where('user_id', $user->id)->orderBy('fecha', 'DESC')->get();
         }
@@ -76,13 +84,12 @@ class ProductoController extends Controller
                     $imgProducto = new ImgProducto();
                     $ruta = 'img/productos/' . auth()->user()->id . '/' . $producto->id;
 
-                    $path = $image->store($ruta);
+                    $path = $image->store($ruta); //subo la foto
 
                     $imgProducto->nombre = $path;
                     $imgProducto->producto_id = $producto->id;
-
-                    $resImg = $imgProducto->save();
                     try {
+                        $resImg = $imgProducto->save();
                     } catch (\Exception $e) {
                         $resImg = 0;
                     };
@@ -107,9 +114,13 @@ class ProductoController extends Controller
      */
     public function show(Producto $producto)
     {
-        $liked = \App\Models\Megusta::where('user_id', '=', auth()->user()->id)->where('producto_id', '=', $producto->id)->first();
         $imgproductos = ImgProducto::where('producto_id', '=', $producto->id)->get();
-        return view('show', ['producto' => $producto, 'imgproductos' => $imgproductos, 'liked' => $liked]);
+        if(auth()->user()) {
+            $liked = \App\Models\Megusta::where('user_id', '=', auth()->user()->id)->where('producto_id', '=', $producto->id)->first();
+            return view('show', ['producto' => $producto, 'imgproductos' => $imgproductos, 'liked' => $liked]);
+        } else {
+            return view('show', ['producto' => $producto, 'imgproductos' => $imgproductos]);
+        }
     }
 
     /**

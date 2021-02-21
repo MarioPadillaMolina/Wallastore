@@ -10,9 +10,9 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
+    <!-- Scripts 
     <script src="{{ asset('js/app.js') }}" defer></script>
-
+    -->
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -20,6 +20,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
 </head>
 
 <body>
@@ -46,7 +47,26 @@
                     <ul class="navbar-nav ml-auto">
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('backend.mensaje.index') }}">Mensajes</a>
+                                @auth
+                                    @php
+                                        $leidos = 1;
+                                        $msgs = \App\Models\Mensaje::where('mensaje.receptor_id', auth()->user()->id)->get();
+                                        //dd($msgs);
+                                    foreach($msgs as $msg) {
+                                        if($msg->leido == 0) {
+                                            $leidos = 0;
+                                        }
+                                    }
+                                    //dd($leidos);
+                                    @endphp
+                                    @if ($leidos == 0)
+                                        <a class="nav-link text-danger"
+                                            href="{{ route('backend.mensaje.index') }}"><strong>Mensajes</strong></a>
+                                    @else
+                                        <a class="nav-link"
+                                            href="{{ route('backend.mensaje.index') }}">Mensajes</a>
+                                    @endif
+                                @endauth
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('backend.megusta.index') }}">Deseados</a>
@@ -58,21 +78,21 @@
                                 <a class="nav-link" href="{{ route('backend.producto.create') }}">Crear producto</a>
                             </li>
                             @if (Auth::user()->admin)
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    Usuarios
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('backend.user.index') }}">
-                                        Lista de usuarios
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        Usuarios
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('backend.user.create') }}">
-                                        Crear usuario
-                                    </a>
-                                </div>
-                            </li>
-                            @endif  
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('backend.user.index') }}">
+                                            Lista de usuarios
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('backend.user.create') }}">
+                                            Crear usuario
+                                        </a>
+                                    </div>
+                                </li>
+                            @endif
 
                         @endauth
                         <!-- Authentication Links -->
@@ -100,8 +120,9 @@
                                         Perfil
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                                 document.getElementById('logout-form').submit();">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                                             document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

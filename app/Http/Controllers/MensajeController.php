@@ -20,10 +20,10 @@ class MensajeController extends Controller
     public function index()
     {
         $mensajes = DB::table('producto')
-        ->join('Mensaje', 'producto.id', 'mensaje.producto_id')
+        ->join('mensaje', 'producto.id', 'mensaje.producto_id')
         ->where('mensaje.emisor_id', auth()->user()->id)
         ->orWhere('mensaje.receptor_id', auth()->user()->id)->orderBy('mensaje.id', 'DESC')->paginate(5);
-        // dd($mensajes);
+        //dd($mensajes);
         return view('backend.mensaje.index', ['mensajes' => $mensajes]);
     }
 
@@ -94,7 +94,23 @@ class MensajeController extends Controller
      */
     public function update(Request $request, Mensaje $mensaje)
     {
-        //
+
+        $mensaje->leido = 1;
+
+        try {
+            $result = $mensaje->save();
+        } catch (\Throwable $th) {
+            $result = 0;
+        }
+
+        if ($result > 0) {
+            $response = ['op' => 'leido', 'result' => $result, 'id' => $mensaje->id];
+            return redirect()->route('backend.mensaje.index')->with($response);
+        } else {
+            return back()->withInput()->withErrors(['error' => 'Algo ha fallado']);
+            //lo recojo con @errors
+        }
+
     }
 
     /**

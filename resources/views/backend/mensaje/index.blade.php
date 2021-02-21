@@ -26,29 +26,43 @@
                     <th scope="col">Producto</th>
                     <th scope="col">Fecha</th>
                     <th scope="col">Mensaje</th>
-                    <th scope="col">Ver</th>
+                    <th scope="col">Responder</th>
+                    <th scope="col">Leído</th>
+
                     {{-- <th scope="col">Dueño Producto</th> --}}
                 </tr>
                 @foreach ($mensajes as $mensaje)
-                    <tr>
-                        <td>{{ $mensaje->id }}</td>
-                        <td>{{ \App\Models\User::find($mensaje->emisor_id)->name }}</td>
-                        <td>{{ \App\Models\User::find($mensaje->receptor_id)->name }}</td>
-                        <td>{{ $mensaje->nombre }}</td>
-                        <td>{{ $mensaje->created_at }}</td>
-                        <td>{{ $mensaje->mensaje }}</td>
-                        <td><a class="mensaje btn btn-success" href="#" data-toggle="modal" data-target="#mensajeModal"
-                            @if($mensaje->emisor_id == auth()->user()->id)
-                                data-emisor="{{ $mensaje->emisor_id }}" 
-                                data-receptor="{{ $mensaje->receptor_id }}"
+                    @if ($mensaje->leido == 0 && $mensaje->emisor_id != auth()->user()->id)
+                        <tr style="background-color: #ff52004f">
+                        @else
+                        <tr>
+                    @endif
+                    <td>{{ $mensaje->id }}</td>
+                    <td>{{ \App\Models\User::find($mensaje->emisor_id)->name }}</td>
+                    <td>{{ \App\Models\User::find($mensaje->receptor_id)->name }}</td>
+                    <td><a
+                            href="{{ url('backend/producto/' . $mensaje->producto_id . 'show') }}">{{ $mensaje->nombre }}</a>
+                    </td>
+                    <td>{{ $mensaje->created_at }}</td>
+                    <td>{{ $mensaje->mensaje }}</td>
+                    <td><a class="mensaje btn btn-success" href="#" data-toggle="modal" data-target="#mensajeModal" @if ($mensaje->emisor_id == auth()->user()->id) data-emisor="{{ $mensaje->emisor_id }}" 
+                                        data-receptor="{{ $mensaje->receptor_id }}"
                             @else
-                                data-receptor="{{ $mensaje->emisor_id }}" 
-                                data-emisor="{{ $mensaje->receptor_id }}"
-                            @endif
-                                data-productoid="{{ $mensaje->producto_id }}"
-                                data-productonombre="{{ $mensaje->nombre }}">
-                                Responder</a>
-                        </td>
+                                        data-receptor="{{ $mensaje->emisor_id }}" 
+                                        data-emisor="{{ $mensaje->receptor_id }}" @endif
+                            data-productoid="{{ $mensaje->producto_id }}"
+                            data-productonombre="{{ $mensaje->nombre }}">
+                            Responder</a>
+                    </td>
+                    <td>
+                        @if ($mensaje->receptor_id == auth()->user()->id && $mensaje->leido == 0)
+                        <form method="post" action="{{ route('backend.mensaje.update', $mensaje->id) }}">
+                            @csrf
+                            @method('put')
+                            <button type="submit" class="btn btn-info">Leído</button>
+                        </form>
+                        @endif
+                    </td>
                     </tr>
                 @endforeach
             </table>
@@ -69,7 +83,7 @@
                     <form action="{{ route('backend.mensaje.store') }}" method="post" id="mensajeForm">
                         <div class="modal-body">
                             @csrf
-                            <meta name="csrf-token" content="{{ csrf_token() }}">
+                            {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
                             <input type="hidden" name="emisor_id" id="emisor_id">
                             <input type="hidden" name="receptor_id" id="receptor_id">
                             <input type="hidden" name="producto_id" id="producto_id">

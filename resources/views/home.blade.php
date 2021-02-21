@@ -70,6 +70,51 @@
                     </div>
                 </div>
                 <br>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        Change Location
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('user.location.update' , $user->id) }}">
+                            @csrf
+                            @method('put')
+                            <div class="form-group row">
+                                <label for="provincia" class="col-md-4 col-form-label text-md-right">Provincia</label>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <select required class="custom-select" id="provincia" name="provincia_id">
+                                            <option disabled value="">Escoge una...</option>
+                                            @foreach ($provincias as $provincia)
+                                                @if ($provincia->id == $user->provincia_id)
+                                                    <option selected value="{{ $provincia->id }}">
+                                                        {{ $provincia->nombre }}</option>
+                                                @else
+                                                    <option value="{{ $provincia->id }}">{{ $provincia->nombre }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-0">
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Change Location
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+
+
+
                 <div class="card">
                     <div class="card-header">Change Password</div>
                     @error('passworderror')

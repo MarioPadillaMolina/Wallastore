@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $provincias = Provincia::all();
+        $provincias = Provincia::orderBy('nombre')->get(); 
         return view('backend.user.create', ['provincias' => $provincias]);
     }
 
@@ -87,7 +87,7 @@ class UserController extends Controller
     {
         //usuario logueado
         $current_user = request()->user();
-        $provincias = Provincia::all();
+        $provincias = Provincia::orderBy('nombre')->get(); 
         //bloqueamos editar al admin id->1
         if ($current_user->id != $user->id && !$current_user->admin) {
             return redirect('backend/user')->with(['error' => 'No tiene permiso para hacer eso']);
@@ -287,5 +287,19 @@ class UserController extends Controller
             session()->flash('restoreemail', false); //no se ha restablecido correctamente tu cuenta de correo anterior
         }
         return redirect('login');
+    }
+
+
+    public function updateLocation(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user->provincia_id = $request->provincia_id;
+        try {
+            $result = $user->save();
+        } catch (\exception $e) {
+            $result = 0;
+        }
+        $response = ['op' => 'updateProvincia', 'r' => $result, 'id' => $user->id];
+        return redirect('home')->with($response);
     }
 }

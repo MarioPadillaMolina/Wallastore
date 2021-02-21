@@ -25,18 +25,20 @@ Route::get('/', [App\Http\Controllers\FrontendController::class, 'index'])->name
 
 //user routes
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 //UserController
 Route::resource('backend/user', UserController::class, ['names' => 'backend.user']); //middleware en el constructor
 //extras user controller
 Route::post('password/change', [UserController::class, 'changePassword'])->name('password.change')->middleware('verified');
 Route::post('user/change', [UserController::class, 'changeUser'])->name('user.change')->middleware('verified');
+Route::put('user/location/{id}', [UserController::class, 'updateLocation'])->name('user.location.update');
 //rutas de restauración de email
 Route::get('email/restore/{id}/{email}', [UserController::class, 'restoreEmail'] )->name('email.restore')->middleware('signed');//muestra el formulario
 Route::post('email/restore/{id}/{email}', [UserController::class, 'restorePreviousEmail'] )->name('email.restore')->middleware('signed'); //salva el form
 
 
 //backend
-Route::resource('backend/producto', ProductoController::class, ['names' => 'backend.producto'])->middleware('verified');
+Route::resource('backend/producto', ProductoController::class, ['names' => 'backend.producto']);
 Route::delete('backend/imgproducto/{id}', [ProductoController::class, 'imgdestroy'] )->name('backend.imgproducto.destroy')->middleware('verified');
 Route::resource('backend/megusta', MegustaController::class, ['names' => 'backend.megusta'])->middleware('verified');
 Route::resource('backend/mensaje', MensajeController::class, ['names' => 'backend.mensaje'])->middleware('verified');

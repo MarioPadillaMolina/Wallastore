@@ -1,0 +1,22 @@
+.mycard {
+    height: 443px;
+    object-fit: cover;
+}
+ 
+.card {
+    margin-bottom: 2em !important;
+}
+
+.imgcardshow {
+    height: 468px;
+    object-fit: contain;
+}
+
+@media (min-width:768px) {
+    .card-deck > .card
+    {
+        width: 30%;
+        flex-wrap: wrap;
+        flex: initial; 
+    }
+}

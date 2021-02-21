@@ -99,6 +99,6 @@ class DatabaseSeeder extends Seeder
         
         // \App\Models\User::factory(20)->create();
         // \App\Models\Producto::factory(100)->create();
-        \App\Models\ImgProducto::factory(100)->create();
+        // \App\Models\ImgProducto::factory(100)->create();
     }
 }

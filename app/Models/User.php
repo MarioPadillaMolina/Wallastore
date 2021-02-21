@@ -41,6 +41,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function provincia()
     {
-        return $this->hasOne('App\Models\Provincia', 'provincia_id');
+        return $this->belongsTo('App\Models\Provincia', 'provincia_id');
     }
 }

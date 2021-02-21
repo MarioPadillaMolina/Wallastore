@@ -31,9 +31,9 @@ class Producto extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function imagenes()
+    public function img_productos()
     {
-        return $this->hasMany('App\Models\ImgProducto', 'imgproducto_id');
+        return $this->hasMany('App\Models\ImgProducto');
     }
 
     public function uso()
