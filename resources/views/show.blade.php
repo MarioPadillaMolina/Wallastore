@@ -51,7 +51,13 @@
                         <div class="col-md-10">
                             <h4 class="card-title"><strong>{{ $producto->nombre }}</strong></h4>
                             <p class="card-text">{{ $producto->descripcion }}.</p>
-                            <p>{{ $producto->user->provincia->nombre }}</p>
+                            <p>{{ $producto->user->provincia->nombre }}
+                            @auth    
+                            @if($producto->user->provincia->id == auth()->user()->provincia_id)
+                                <span class="text-danger"><strong>Producto cerca de ti</strong></span>
+                            @endif
+                            @endauth
+                            </p>
                             <p><strong>Estado:</strong> {{ $producto->uso->nombre }} - <strong>Categoría:</strong> {{ $producto->categoria->nombre }}
                             </p>
                         </div>

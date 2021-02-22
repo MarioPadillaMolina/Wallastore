@@ -26,7 +26,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all(); //esto lo hace eloquent
+        $users = User::all()->paginate(10); //esto lo hace eloquent
         return view('backend.user.index', ['users' => $users]);
     }
 
@@ -142,6 +142,7 @@ class UserController extends Controller
         $current_user = request()->user();
         $result = 0;
         if ($current_user->id == 1 && $user->id != 1) { //si eres super admin borras a quien sea menos a ti
+            
             try {
                 $result = $user->delete();
             } catch (\Exception $ex) {

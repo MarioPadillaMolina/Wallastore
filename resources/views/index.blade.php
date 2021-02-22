@@ -32,6 +32,11 @@
                         <small class="text-muted">
                             {{ $producto->user->provincia->nombre . " - " . $producto->categoria->nombre . " - " . $producto->uso->nombre }}
                             <br> {{ $producto->fecha }}
+                            @auth
+                            @if($producto->user->provincia->id == auth()->user()->provincia_id)
+                            <span class="text-danger"><strong>Producto cerca de ti</strong></span>
+                            @endif
+                            @endauth
                         </small>
                     </div>
                 </div>
@@ -40,6 +45,6 @@
         </div>
     </div>
 
-    {{-- {{ $productos->links() }} --}}
+    {{ $productos->links() }}
 </div>
 @endsection

@@ -33,9 +33,9 @@ class ProductoController extends Controller
     {
         $user = auth()->user();
         if ($user->admin) {
-            $productos = Producto::orderBy('fecha', 'DESC')->get();
+            $productos = Producto::orderBy('fecha', 'DESC')->paginate(10);
         } else {
-            $productos =  Producto::where('user_id', $user->id)->orderBy('fecha', 'DESC')->get();
+            $productos =  Producto::where('user_id', $user->id)->orderBy('fecha', 'DESC')->paginate(10);
         }
         return view('backend.producto.index', ['productos' => $productos]);
     }
@@ -204,7 +204,6 @@ class ProductoController extends Controller
     public function destroy(Producto $producto)
     {
         // $result = $producto->delete();
-
         try {
             $result = $producto->delete();
         } catch (\Exception $ex) {

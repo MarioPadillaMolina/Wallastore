@@ -43,7 +43,7 @@
             @endforeach
 
         </table>
-        {{-- {{ $users->links() }} --}}
+        {{ $users->links() }}
         
         <!-- modal alert -->
         <div class="modal fade" id="modalDelete" style="display: none;" aria-hidden="true">

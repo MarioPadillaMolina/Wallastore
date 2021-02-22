@@ -38,7 +38,7 @@ Route::post('email/restore/{id}/{email}', [UserController::class, 'restorePrevio
 
 
 //backend
-Route::resource('backend/producto', ProductoController::class, ['names' => 'backend.producto']);
+Route::resource('backend/producto', ProductoController::class, ['names' => 'backend.producto']);//middleware en el constructor
 Route::delete('backend/imgproducto/{id}', [ProductoController::class, 'imgdestroy'] )->name('backend.imgproducto.destroy')->middleware('verified');
 Route::resource('backend/megusta', MegustaController::class, ['names' => 'backend.megusta'])->middleware('verified');
 Route::resource('backend/mensaje', MensajeController::class, ['names' => 'backend.mensaje'])->middleware('verified');
